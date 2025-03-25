@@ -1,0 +1,105 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, Filter } from "lucide-react";
+
+const products = [
+  { id: 1, name: "Комбинезон", price: 1200, size: "80", color: "blue", image: "/images/romper.jpg" },
+  { id: 2, name: "Футболка", price: 800, size: "92", color: "white", image: "/images/tshirt.jpg" },
+  { id: 3, name: "Шорты", price: 1000, size: "86", color: "black", image: "/images/shorts.jpg" },
+];
+
+export default function Home() {
+  const [cart, setCart] = useState([]);
+  const [filter, setFilter] = useState({ size: "", color: "" });
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
+
+  const filteredProducts = products.filter(
+    (p) =>
+      (!filter.size || p.size === filter.size) &&
+      (!filter.color || p.color === filter.color)
+  );
+
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">Магазин детской одежды</h1>
+      
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-4">
+          <select
+            className="border p-2 rounded"
+            onChange={(e) => setFilter({ ...filter, size: e.target.value })}
+          >
+            <option value="">Все размеры</option>
+            <option value="80">80</option>
+            <option value="86">86</option>
+            <option value="92">92</option>
+          </select>
+          <select
+            className="border p-2 rounded"
+            onChange={(e) => setFilter({ ...filter, color: e.target.value })}
+          >
+            <option value="">Все цвета</option>
+            <option value="blue">Синий</option>
+            <option value="white">Белый</option>
+            <option value="black">Черный</option>
+          </select>
+        </div>
+        <div className="text-lg font-semibold">Корзина: {cart.length} товаров</div>
+      </div>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredProducts.map((product) => (
+          <Card key={product.id} className="p-4 flex flex-col items-center text-center">
+            <img src={product.image} alt={product.name} className="w-full h-48 object-cover rounded-lg" />
+            <CardContent>
+              <h2 className="text-xl font-semibold mt-2">{product.name}</h2>
+              <p className="text-gray-600">{product.price}₽</p>
+              <Button className="mt-4 flex items-center gap-2 w-full justify-center" onClick={() => addToCart(product)}>
+                <ShoppingCart size={16} /> В корзину
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold text-center">О нашей компании</h2>
+        <p className="mt-4 text-gray-700 text-center">
+          Бренд «Тwins» был основан в 2013 году в Казахстане. За этот период выросла от мелкого оптовика,
+          до крупного Оптового склада с собственной фабрикой.
+        </p>
+      </section>
+      
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold text-center">Преимущества</h2>
+        <ul className="mt-4 text-gray-700 text-center list-disc list-inside">
+          <li>100% натуральные ткани</li>
+          <li>Собственное производство</li>
+          <li>Контроль качества</li>
+          <li>Доступные цены</li>
+          <li>Доставка по всему СНГ</li>
+        </ul>
+      </section>
+      
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold text-center">Доставка</h2>
+        <p className="mt-4 text-gray-700 text-center">
+          Мы доставляем заказы по всему СНГ удобными курьерскими службами.
+        </p>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold text-center">Контакты</h2>
+        <p className="mt-4 text-gray-700 text-center">
+          Телефон: +7 (123) 456-78-90<br/>
+          Email: info@twins.kz<br/>
+          Адрес: Казахстан, г. Алматы, ул. Текстильная, д. 10
+        </p>
+      </section>
+    </div>
+  );
+}
